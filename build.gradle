@@ -2,42 +2,35 @@
 
 buildscript {
     repositories {
-        mavenCentral()
-        // jcenter()
         google()
-        maven {
-            url 'https://maven.aliyun.com/repository/public'
-        }
-        maven { url 'https://developer.huawei.com/repo/' }
+        mavenCentral()
+        maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://jitpack.io' }
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
-        maven { url 'https://repo1.maven.org/maven2/' }
-
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.0'
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.19'
-        classpath 'com.android.tools.build:gradle-experimental:0.11.1'
-        // We recommend changing it to the latest version from our changelog:
-        // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
     }
 }
 
 allprojects {
     repositories {
-        mavenLocal()
-        // jcenter()
         google()
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
-        maven { url 'https://repo1.maven.org/maven2/' }
+        mavenCentral()
+        maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://jitpack.io' }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+// تعریف نسخه‌های یکسان برای تمام ماژول‌ها
+ext {
+    supportLibraryVersion = '28.0.0'
+    buildToolsVersion = '30.0.0'
+    compileSdkVersion = 30
+    targetSdkVersion = 30
+    minSdkVersion = 21
 }
