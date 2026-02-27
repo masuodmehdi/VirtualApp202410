@@ -97,7 +97,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':lib')
-//    implementation project(':launcher')
+    implementation project(':launcher')
     // 明确指定依赖 :launcher 模块的 aospDebug 变体
 //    aospImplementation project(path: ':launcher', configuration: 'aospDebug')
 //    fdroidImplementation project(path: ':launcher', configuration: 'aospDebug') // 或者根据需求选择其他变体
