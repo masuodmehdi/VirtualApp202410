@@ -71,8 +71,25 @@ android {
     // تنظیمات برای جلوگیری از تداخل منابع
     packagingOptions {
         resources {
-            excludes += ['META-INF/**']
-            pickFirsts += ['**/AndroidManifest.xml']
+            excludes += ['META-INF/**', 
+               '**/attr/iconSize',
+                '**/values.xml'
+            ]
+            pickFirsts += [
+                '**/AndroidManifest.xml',
+                '**/values/values.xml'
+            ]
+        }
+    }
+    
+    // تنظیمات AAPT برای نادیده گرفتن خطاهای تکراری
+    aaptOptions {
+        cruncherEnabled = false
+        additionalParameters "--no-version-vectors", 
+                            "--ignore-assets", 
+                            "attr/iconSize:values.xml"
+    }
+            }
         }
     }
 }
