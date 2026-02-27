@@ -18,6 +18,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.19'
         classpath 'com.android.tools.build:gradle-experimental:0.11.1'
         // We recommend changing it to the latest version from our changelog:
         // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
