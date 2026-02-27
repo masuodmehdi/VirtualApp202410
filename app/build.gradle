@@ -4,10 +4,10 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
-    namespace 'io.va.exposed64'
+    namespace 'io.virtualapp'
 
     defaultConfig {
-        applicationId "io.va.exposed64"
+        applicationId "io.virtualapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 220
