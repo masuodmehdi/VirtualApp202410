@@ -26,7 +26,8 @@ jobs:
 
       # بیلد گرفتن از پروژه (بدون نیاز به امضا)
       - name: بیلد پروژه
-        run: ./gradlew assembleDebug
+        run: ./gradlew app:dependencies > deps.txt
+        #./gradlew assembleDebug
 
       # آپلود همه فایل‌های APK ساخته شده
       - name: آپلود APKها
