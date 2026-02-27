@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+راapply plugin: 'com.android.application'
 
 Properties properties = new Properties()
 def localProp = file(project.rootProject.file('local.properties'))
@@ -95,13 +95,6 @@ android {
                             "--ignore-assets", 
                             "attr/iconSize:values.xml",
                             "--override-styles"
-    }
-    }
-    
-    // تنظیمات AAPT برای منابع
-    aaptOptions {
-        cruncherEnabled = false
-        additionalParameters "--no-version-vectors", "--allow-reserved-package-id"
     }
 }
 
