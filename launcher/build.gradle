@@ -89,7 +89,7 @@ android {
                             "--ignore-assets", 
                             "attr/iconSize:values.xml"
     }
-            }
+            
         }
     }
 }
