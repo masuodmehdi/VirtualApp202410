@@ -1,0 +1,55 @@
+name: Build VirtualApp Project
+
+# این workflow با هر push روی شاخه اصلی و با فعال‌سازی دستی اجرا می‌شود
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:        # اجازه اجرای دستی از تب Actions
+
+jobs:
+  build:
+    # استفاده از آخرین نسخه اوبونتو برای محیط ساخت
+    runs-on: ubuntu-latest
+
+    steps:
+      # مرحله 1: دریافت کد پروژه
+      - name: دریافت کد منبع
+        uses: actions/checkout@v4
+
+      # مرحله 2: نصب JDK مورد نیاز (پروژه از Java 8 استفاده می‌کند)
+      - name: نصب JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'        # توزیع Azul Zulu
+          java-version: '8'            # نسخه 8 برای سازگاری با پروژه‌های قدیمی‌تر
+
+      # مرحله 3: تنظیم مجوز اجرا برای فایل gradlew
+      - name: تنظیم مجوز Gradle Wrapper
+        run: chmod +x gradlew
+
+      # مرحله 4: بیلد گرفتن از همه ماژول‌ها (با حذف تست‌ها برای سرعت)
+      - name: بیلد پروژه با Gradle
+        run: ./gradlew assembleDebug -x test
+
+      # مرحله 5: آپلود خروجی ماژول اصلی (app)
+      - name: آپلود APK ماژول اصلی (app)
+        uses: actions/upload-artifact@v4
+        with:
+          name: VirtualApp-Module-App-Debug
+          path: app/build/outputs/apk/debug/
+
+      # مرحله 6: آپلود خروجی ماژول launcher (اگر وجود داشته باشد)
+      - name: آپلود APK ماژول Launcher
+        uses: actions/upload-artifact@v4
+        with:
+          name: VirtualApp-Module-Launcher-Debug
+          path: launcher/build/outputs/apk/debug/
+
+      # مرحله 7: آپلود خروجی ماژول app-plugin (اگر وجود داشته باشد)
+      - name: آپلود APK ماژول Plugin
+        uses: actions/upload-artifact@v4
+        with:
+          name: VirtualApp-Module-Plugin-Debug
+          path: app-plugin/build/outputs/apk/debug/
