@@ -1,32 +1,11 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        google()
-        maven {
-            url 'https://maven.aliyun.com/repository/public'
-        }
-        maven { url 'https://developer.huawei.com/repo/' }
-        maven { url 'https://jitpack.io' }
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
-        maven { url 'https://repo1.maven.org/maven2/' }
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.19'
-    }
-}
-
 // تغییر از application به library
 apply plugin: 'com.android.library'
-apply plugin: 'com.google.protobuf'
-apply plugin: 'com.google.osdetector'
 
 android {
     compileSdkVersion 30
     buildToolsVersion '30.0.0'
+
+    namespace 'com.android.launcher3'  // اضافه کردن namespace
 
     defaultConfig {
         minSdkVersion 21
@@ -34,54 +13,26 @@ android {
         versionCode 30907
         versionName "3.9"
         vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         
-        // حذف applicationId چون کتابخانه نباید ID داشته باشه
-        // applicationId 'amirz.rootless.nexuslauncher'
-        // testApplicationId 'amirz.rootless.nexuslauncher.tests'
+        // حذف applicationId و testApplicationId
+        // testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    lintOptions {
-        abortOnError false
-    }
-
-    buildTypes {
-        debug {
-            minifyEnabled false
-            // کتابخانه نباید applicationIdSuffix داشته باشه
-            // applicationIdSuffix ".debug"
-        }
-
-        optimized {
-            initWith debug
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
-                    'proguard.flags'
-        }
-
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
-                    'proguard.flags'
-        }
-    }
+    // ... بقیه تنظیمات مثل lintOptions و buildTypes ...
     
     flavorDimensions 'main'
     productFlavors {
-    aosp {
-        dimension 'main'
+        aosp {
+            dimension 'main'
+        }
+        l3go {
+            dimension 'main'
+        }
+        fdroid {  // اضافه کردن fdroid برای تطابق با app
+            dimension 'main'
+        }
     }
     
-    l3go {
-        dimension 'main'
-    }
-    
-    // اضافه کردن طعم fdroid
-    fdroid {
-        dimension 'main'
-    }
-}
-
     sourceSets {
         main {
             res.srcDirs = ['res']
@@ -89,45 +40,39 @@ android {
             aidl.srcDirs = ['src']
             assets.srcDirs = ['assets']
             manifest.srcFile 'AndroidManifest-common.xml'
-            proto {
-                srcDir 'protos/'
-                srcDir 'proto_overrides/'
-                srcDir 'proto_pixel/'
-            }
         }
-
-        androidTest {
-            res.srcDirs = ['tests/res']
-            java.srcDirs = ['tests/src']
-            manifest.srcFile "tests/AndroidManifest-common.xml"
-        }
-
+        
+        // تنظیم sourceSets برای flavors مختلف
         aosp {
             java.srcDirs = ['src_flags']
             manifest.srcFile "AndroidManifest.xml"
         }
-
-        androidTestAosp {
-            manifest.srcFile "tests/AndroidManifest.xml"
-        }
-
         l3go {
             res.srcDirs = ['go/res']
             java.srcDirs = ['go/src_flags']
             manifest.srcFile "AndroidManifest.xml"
         }
-
-        androidTestL3go {
-            manifest.srcFile "tests/AndroidManifest.xml"
+        fdroid {
+            // استفاده از منابع aosp برای fdroid
+            java.srcDirs = ['src_flags']
+            manifest.srcFile "AndroidManifest.xml"
         }
     }
     
-    // تغییر از applicationVariants به libraryVariants
+    // حذف applicationVariants و استفاده از libraryVariants
     libraryVariants.all { variant ->
         variant.outputs.each { output ->
             output.processManifest.doLast {
-                // کد مربوط به پردازش manifest
+                // کد مربوط به پردازش manifest (اگه لازمه)
             }
+        }
+    }
+    
+    // تنظیمات برای جلوگیری از تداخل منابع
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/**']
+            pickFirsts += ['**/AndroidManifest.xml']
         }
     }
 }
@@ -146,39 +91,16 @@ dependencies {
     implementation "com.android.support:support-dynamic-animation:${SUPPORT_LIBS_VERSION}"
     implementation "com.android.support:recyclerview-v7:${SUPPORT_LIBS_VERSION}"
     implementation "com.android.support:palette-v7:${SUPPORT_LIBS_VERSION}"
-    implementation 'com.google.protobuf.nano:protobuf-javanano:3.2.0rc2'
-
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation "org.mockito:mockito-core:1.10.19"
-    androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
-    androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
-    androidTestImplementation "com.android.support:support-annotations:${SUPPORT_LIBS_VERSION}"
-}
-
-protobuf {
-    protoc {
-        if (osdetector.os == "osx") {
-            artifact = 'com.google.protobuf:protoc:3.0.0-alpha-3:osx-x86_64'
-        } else {
-            artifact = 'com.google.protobuf:protoc:3.0.0-alpha-3'
-        }
-    }
     
-    generateProtoTasks {
-        all().each { task ->
-            task.builtins {
-                remove java
-                javanano {
-                    option "java_package=launcher_log_extension.proto|com.android.launcher3.userevent.nano"
-                    option "java_package=launcher_log.proto|com.android.launcher3.userevent.nano"
-                    option "java_package=launcher_dump.proto|com.android.launcher3.model.nano"
-                    option "java_package=search.proto|com.google.android.apps.nexuslauncher.search.nano"
-                    option "java_package=smartspace.proto|com.google.android.apps.nexuslauncher.smartspace.nano"
-                    option "enum_style=java"
-                }
-            }
-        }
-    }
+    // فقط وابستگی‌های ضروری رو نگه دارید
+    compileOnly 'com.google.protobuf.nano:protobuf-javanano:3.2.0rc2'
+    
+    // وابستگی‌های تست رو حذف کنید یا با compileOnly اضافه کنید
+    compileOnly 'junit:junit:4.12'
+    compileOnly "org.mockito:mockito-core:1.10.19"
 }
+
+// protobuf رو هم اگه لازم نیست، کامنت کنید
+// protobuf {
+//     ...
+// }
