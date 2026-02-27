@@ -72,14 +72,30 @@ android {
     }
     
     // اضافه کردن تنظیمات برای حل تداخل منابع
+    
+    // ... بقیه تنظیمات
+    
     packagingOptions {
         resources {
-            excludes += [ 'META-INF/**',
+            excludes += [
+                'META-INF/**',
                 '**/attr/iconSize',
                 '**/values.xml'
             ]
-            pickFirsts += ['**/values.xml', '**/values-pt-rBR/strings.xml']
+            pickFirsts += [
+                '**/AndroidManifest.xml',
+                '**/values/values.xml'
+            ]
         }
+    }
+    
+    aaptOptions {
+        cruncherEnabled = false
+        additionalParameters "--no-version-vectors", 
+                            "--ignore-assets", 
+                            "attr/iconSize:values.xml",
+                            "--override-styles"
+    }
     }
     
     // تنظیمات AAPT برای منابع
