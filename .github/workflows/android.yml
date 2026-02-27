@@ -19,11 +19,11 @@ jobs:
         uses: actions/checkout@v4
 
       # مرحله 2: نصب JDK مورد نیاز (پروژه از Java 8 استفاده می‌کند)
-      - name: نصب JDK 8
+      - name: نصب JDK 11
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'        # توزیع Azul Zulu
-          java-version: '8'            # نسخه 8 برای سازگاری با پروژه‌های قدیمی‌تر
+          java-version: '11'            # نسخه 8 برای سازگاری با پروژه‌های قدیمی‌تر
 
       # مرحله 3: تنظیم مجوز اجرا برای فایل gradlew
       - name: تنظیم مجوز Gradle Wrapper
