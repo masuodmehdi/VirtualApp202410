@@ -74,7 +74,10 @@ android {
     // اضافه کردن تنظیمات برای حل تداخل منابع
     packagingOptions {
         resources {
-            excludes += ['META-INF/**']
+            excludes += [ 'META-INF/**',
+                '**/attr/iconSize',
+                '**/values.xml'
+            ]
             pickFirsts += ['**/values.xml', '**/values-pt-rBR/strings.xml']
         }
     }
