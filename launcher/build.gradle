@@ -68,20 +68,19 @@ android {
     
     flavorDimensions 'main'
     productFlavors {
-        aosp {
-            // حذف applicationId
-            // applicationId 'amirz.rootless.nexuslauncher'
-            // testApplicationId 'amirz.rootless.nexuslauncher.tests'
-            dimension 'main'  // تغییر dimension به main
-        }
-
-        l3go {
-            // حذف applicationId
-            // applicationId 'amirz.rootless.nexuslauncher'
-            // testApplicationId 'amirz.rootless.nexuslauncher.tests'
-            dimension 'main'  // تغییر dimension به main
-        }
+    aosp {
+        dimension 'main'
     }
+    
+    l3go {
+        dimension 'main'
+    }
+    
+    // اضافه کردن طعم fdroid
+    fdroid {
+        dimension 'main'
+    }
+}
 
     sourceSets {
         main {
